@@ -1,18 +1,20 @@
 from fastapi import APIRouter
-from sqlalchemy import text
+from sqlmodel import select
 
+from src.books.models import Book
+from src.books.service import BookService
 from src.database import SessionDep
 
 router = APIRouter()
 
 
 @router.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def get_all_books():
+    books = await BookService.get_all()
+    return books
 
 
-@router.get("/check-db-connection")
-async def check_db_connection(session: SessionDep):
-    """Check if the database connection is successful"""
-    result = await session.execute(text("SELECT 1"))
-    return {"message": "Connection to the database successful"}
+# @router.post("/")
+# async def create_book(book_data: Book):
+#     book = await BookService.create(book_data)
+#     return book

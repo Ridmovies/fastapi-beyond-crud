@@ -23,6 +23,11 @@ Ensure you have the following installed:
 - PostgreSQL
 - Redis
 
+### Instruments in project
+- FastApi
+- SQLModel
+- Poetry
+
 ### Project Setup
 1. Clone the project repository:
     ```bash

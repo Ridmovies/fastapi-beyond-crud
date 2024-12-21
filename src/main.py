@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from src.books.router import router as book_router
+from src.config import settings
+from src.dev.router import router as dev_router
+
 from src.database import init_models
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_models()
     yield
 
 
@@ -41,6 +43,8 @@ app = FastAPI(
 )
 
 app.include_router(book_router, prefix=f"{version_prefix}/books", tags=["books"])
+if settings.MODE == "DEV":
+    app.include_router(dev_router, prefix=f"{version_prefix}/dev", tags=["dev"])
 
 
 @app.get("/")
