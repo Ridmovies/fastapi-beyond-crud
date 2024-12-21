@@ -28,10 +28,54 @@ class BaseService:
             result = await session.execute(query)
             return result.scalar_one_or_none()
 
+
     @classmethod
-    async def create(cls, **data):
+    async def create(cls, data):
         async with a_session() as session:
-            instance = cls.model(**data)
+            data_dict = data.model_dump()
+            instance = cls.model(**data_dict)
             session.add(instance)
             await session.commit()
             return instance
+
+
+    @classmethod
+    async def delete(cls, model_id: int):
+        async with a_session() as session:
+            query = select(cls.model).filter_by(id=int(model_id))
+            result = await session.execute(query)
+            instance = result.scalar_one_or_none()
+            if instance:
+                await session.delete(instance)
+                await session.commit()
+
+
+    @classmethod
+    async def update(cls, model_id: int, update_data):
+        async with a_session() as session:
+            query = select(cls.model).filter_by(id=int(model_id))
+            result = await session.execute(query)
+            instance = result.scalar_one_or_none()
+            if instance:
+                for key, value in update_data.model_dump().items():
+                    setattr(instance, key, value)
+                await session.commit()
+                return instance
+            else:
+                raise Exception('No such instance')
+
+
+    @classmethod
+    async def patch(cls, model_id: int, update_data):
+        async with a_session() as session:
+            query = select(cls.model).filter_by(id=int(model_id))
+            result = await session.execute(query)
+            instance = result.scalar_one_or_none()
+            if instance:
+                for key, value in update_data.model_dump(exclude_unset=True).items():
+                    setattr(instance, key, value)
+                await session.commit()
+                return instance
+            else:
+                raise Exception('No such instance')
+
