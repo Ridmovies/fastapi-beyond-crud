@@ -33,3 +33,25 @@ async def init_models() -> None:
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)  # noqa: ERA001
         await conn.run_sync(SQLModel.metadata.create_all)
+
+
+
+# from sqlalchemy.ext.asyncio import create_async_engine
+# from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
+# from sqlmodel.ext.asyncio.session import AsyncSession
+
+
+# from src.config import settings
+#
+# DATABASE_URL = settings.DATABASE_URL
+#
+# connectable = create_async_engine(DATABASE_URL, echo=True, future=True)
+#
+# async def get_session() -> AsyncSession:
+#     async_session = async_sessionmaker(
+#         bind=connectable,
+#         expire_on_commit=False
+#     )
+#     async with async_session() as session:
+#         yield session

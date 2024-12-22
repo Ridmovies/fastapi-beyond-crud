@@ -15,7 +15,7 @@ class BookService(BaseService):
 
 class BookOtherService:
     async def get_all_books_other(self, session: AsyncSession):
-        statement = select(Book)
+        statement = select(Book).order_by(desc(Book.created_at))
         result = await session.scalars(statement)
         return result.all()
 
