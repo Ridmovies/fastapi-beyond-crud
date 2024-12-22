@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database import a_session
+from src.database import async_session
 
 
 class BaseService:
@@ -9,21 +9,21 @@ class BaseService:
 
     @classmethod
     async def get_all(cls, **filter_by):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
             return result.scalars().all()
 
     @classmethod
     async def get_one_or_none(cls, **filter_by):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
             return result.scalar_one_or_none()
 
     @classmethod
     async def get_one_by_id(cls, model_id: int):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(id=int(model_id))
             result = await session.execute(query)
             return result.scalar_one_or_none()
@@ -31,7 +31,7 @@ class BaseService:
 
     @classmethod
     async def create(cls, data):
-        async with a_session() as session:
+        async with async_session() as session:
             data_dict = data.model_dump()
             instance = cls.model(**data_dict)
             session.add(instance)
@@ -41,7 +41,7 @@ class BaseService:
 
     @classmethod
     async def delete(cls, model_id: int):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(id=int(model_id))
             result = await session.execute(query)
             instance = result.scalar_one_or_none()
@@ -52,7 +52,7 @@ class BaseService:
 
     @classmethod
     async def update(cls, model_id: int, update_data):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(id=int(model_id))
             result = await session.execute(query)
             instance = result.scalar_one_or_none()
@@ -67,7 +67,7 @@ class BaseService:
 
     @classmethod
     async def patch(cls, model_id: int, update_data):
-        async with a_session() as session:
+        async with async_session() as session:
             query = select(cls.model).filter_by(id=int(model_id))
             result = await session.execute(query)
             instance = result.scalar_one_or_none()

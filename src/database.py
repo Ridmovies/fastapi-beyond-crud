@@ -1,8 +1,10 @@
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
+# from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel, create_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.config import settings
 
@@ -11,18 +13,17 @@ DATABASE_URL = f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@
 
 # async_engine = create_async_engine(url=DATABASE_URL, echo=True)
 async_engine = AsyncEngine(create_engine(url=DATABASE_URL, echo=True))
-a_session = async_sessionmaker(async_engine, expire_on_commit=False)
+async_session = async_sessionmaker(async_engine, expire_on_commit=False)
 
 # class Base(DeclarativeBase): ...
 
 
 async def get_session():
-    async with a_session() as session:
+    async with async_session() as session:
         yield session
 
-
+# AsyncSession from sqlmodel.ext.asyncio.session
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
-
 
 async def init_models() -> None:
     """Create tables if they don't already exist.
