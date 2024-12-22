@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from src.books.router import router as book_router
 from src.config import settings
+
+from src.books.router import router as book_router
 from src.dev.router import router as dev_router
+from src.hero.router import router as hero_router
 
 from src.database import init_models
 
@@ -43,6 +45,7 @@ app = FastAPI(
 )
 
 app.include_router(book_router, prefix=f"{version_prefix}/books", tags=["books"])
+app.include_router(hero_router, prefix=f"{version_prefix}/hero", tags=["hero"])
 if settings.MODE == "DEV":
     app.include_router(dev_router, prefix=f"{version_prefix}/dev", tags=["dev"])
 

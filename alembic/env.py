@@ -8,6 +8,7 @@ from alembic import context
 from src.config import settings
 from src.database import SQLModel
 from src.books.models import Book # noqa
+from src.hero.models import Hero # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
