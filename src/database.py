@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
+from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel, create_engine
@@ -9,10 +10,11 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.config import settings
 
 DATABASE_URL = f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+DATABASE_PARAMS = {"poolclass": NullPool}
 
 
 # async_engine = create_async_engine(url=DATABASE_URL, echo=True)
-async_engine = AsyncEngine(create_engine(url=DATABASE_URL, echo=True))
+async_engine = AsyncEngine(create_engine(url=DATABASE_URL, echo=True, **DATABASE_PARAMS))
 async_session = async_sessionmaker(async_engine, expire_on_commit=False)
 
 # class Base(DeclarativeBase): ...
@@ -34,24 +36,3 @@ async def init_models() -> None:
         await conn.run_sync(SQLModel.metadata.drop_all)  # noqa: ERA001
         await conn.run_sync(SQLModel.metadata.create_all)
 
-
-
-# from sqlalchemy.ext.asyncio import create_async_engine
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
-# from sqlmodel.ext.asyncio.session import AsyncSession
-
-
-# from src.config import settings
-#
-# DATABASE_URL = settings.DATABASE_URL
-#
-# connectable = create_async_engine(DATABASE_URL, echo=True, future=True)
-#
-# async def get_session() -> AsyncSession:
-#     async_session = async_sessionmaker(
-#         bind=connectable,
-#         expire_on_commit=False
-#     )
-#     async with async_session() as session:
-#         yield session
