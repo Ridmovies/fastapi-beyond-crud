@@ -12,13 +12,11 @@ class BookService(BaseService):
     model = Book
 
 
-
 class BookOtherService:
     async def get_all_books_other(self, session: AsyncSession):
         statement = select(Book).order_by(desc(Book.created_at))
         result = await session.scalars(statement)
         return result.all()
-
 
     async def get_book(self, book_id: int, session: AsyncSession):
         statement = select(Book).where(Book.id == book_id)
@@ -26,9 +24,7 @@ class BookOtherService:
         book = result.first()
         return book if book is not None else None
 
-    async def create_book(
-        self, book_data: BookCreateSchema, session: AsyncSession
-    ):
+    async def create_book(self, book_data: BookCreateSchema, session: AsyncSession):
         book_data_dict = book_data.model_dump()
 
         new_book = Book(**book_data_dict)
@@ -58,7 +54,6 @@ class BookOtherService:
             return book_to_update
         else:
             return None
-
 
     async def delete_book(self, book_id: int, session: AsyncSession):
         book_to_delete = await self.get_book(book_id, session)

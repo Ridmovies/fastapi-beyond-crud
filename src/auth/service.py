@@ -15,7 +15,7 @@ class UserService:
         await session.commit()
         return user
 
-    async def get_user_by_email(self, email:str, session: AsyncSession):
+    async def get_user_by_email(self, email: str, session: AsyncSession):
         stmt = select(User).where(User.email == email)
         result = await session.scalars(stmt)
         user = result.first()
@@ -30,4 +30,3 @@ class UserService:
     async def user_exists(self, email, session: AsyncSession):
         user = await self.get_user_by_email(email, session)
         return True if user else False
-

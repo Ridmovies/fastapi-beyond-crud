@@ -5,7 +5,7 @@ import pytest_asyncio
 
 from sqlmodel import SQLModel
 
-from src.config import settings
+# from src.config import settings
 from src.database import async_engine
 from src.main import app
 

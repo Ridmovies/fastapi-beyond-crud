@@ -16,8 +16,6 @@ async def lifespan(app: FastAPI):
     yield
 
 
-
-
 version = "v1"
 
 description = """
@@ -29,7 +27,7 @@ This REST API is able to;
 - Add tags to Books e.t.c.
     """
 
-version_prefix =f"/api/{version}"
+version_prefix = f"/api/{version}"
 
 
 app = FastAPI(

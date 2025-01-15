@@ -2,6 +2,7 @@ import pytest
 
 auth_prefix = f"/api/v1/auth"
 
+
 @pytest.mark.asyncio
 async def test_user_creation(client):
     response = await client.get(url="/api/v1/auth")

@@ -1,6 +1,11 @@
 from fastapi import APIRouter
 
-from src.books.schemas import BookCreateSchema, BookSchema, BookUpdateSchema, BookPatchSchema
+from src.books.schemas import (
+    BookCreateSchema,
+    BookSchema,
+    BookUpdateSchema,
+    BookPatchSchema,
+)
 from src.books.service import BookService, BookOtherService
 from src.database import SessionDep
 
@@ -10,6 +15,7 @@ book_service = BookOtherService()
 
 
 ### First option for using the BookService without session
+
 
 @router.get("/", response_model=list[BookSchema])
 async def get_all_books():
@@ -27,6 +33,7 @@ async def get_book(book_id: int):
 async def create_book(book_data: BookCreateSchema):
     book = await BookService.create(data=book_data)
     return book
+
 
 @router.delete("/{book_id}")
 async def delete_book(book_id: int):
@@ -63,10 +70,12 @@ async def create_book(book_data: BookCreateSchema, session: SessionDep):
     book = await book_service.create_book(book_data, session)
     return book
 
+
 @router.put("/other/{book_id}", response_model=BookSchema)
 async def update_book(book_id: int, update_data: BookUpdateSchema, session: SessionDep):
     book = await book_service.update_book(book_id, update_data, session)
     return book
+
 
 @router.delete("/other/{book_id}")
 async def delete_book(book_id: int, session: SessionDep):

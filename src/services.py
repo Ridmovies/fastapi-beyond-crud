@@ -28,7 +28,6 @@ class BaseService:
             result = await session.execute(query)
             return result.scalar_one_or_none()
 
-
     @classmethod
     async def create(cls, data):
         async with async_session() as session:
@@ -37,7 +36,6 @@ class BaseService:
             session.add(instance)
             await session.commit()
             return instance
-
 
     @classmethod
     async def delete(cls, model_id: int):
@@ -48,7 +46,6 @@ class BaseService:
             if instance:
                 await session.delete(instance)
                 await session.commit()
-
 
     @classmethod
     async def update(cls, model_id: int, update_data):
@@ -62,8 +59,7 @@ class BaseService:
                 await session.commit()
                 return instance
             else:
-                raise Exception('No such instance')
-
+                raise Exception("No such instance")
 
     @classmethod
     async def patch(cls, model_id: int, update_data):
@@ -77,5 +73,4 @@ class BaseService:
                 await session.commit()
                 return instance
             else:
-                raise Exception('No such instance')
-
+                raise Exception("No such instance")
