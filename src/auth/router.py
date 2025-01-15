@@ -16,6 +16,11 @@ REFRESH_TOKEN_EXPIRY = 2
 
 # Bearer Token
 
+# curl -X 'GET' \
+#   'http://127.0.0.1:8000/api/v1/auth' \
+#   -H 'accept: application/json' \
+#   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3RyaW5nIiwidXNlcl91aWQiOiJiYzJkODZlZi0yODE3LTRlYmEtOTI3Zi0zNzY2ZjVjMGYxNjAifSwiZXhwIjoxNzM2OTY2MTQ5LCJqdGkiOiIyMDFjYmI4MC1iMjQ5LTRiZDMtYTFiZS02MzgyZDZkMjQyOWUiLCJyZWZyZXNoIjpmYWxzZX0.hnxuYsF5a8wzvSS5oO63uLAkFxQ6ikatXR3RUgEmEGw'
+
 @router.get("", response_model=list[UserSchema])
 async def get_all_users(session: SessionDep, user_details=Depends(access_token_bearer)):
     print(f"{user_details=}")
