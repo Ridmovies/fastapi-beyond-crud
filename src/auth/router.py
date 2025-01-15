@@ -1,8 +1,9 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 
+from src.auth.dependencies import AccessTokenBearer, RefreshTokenBearer
 from src.auth.schemas import UserCreateSchema, UserSchema, UserLoginSchema
 from src.auth.service import UserService
 from src.auth.utils import verify_password, create_access_token
@@ -10,12 +11,14 @@ from src.database import SessionDep
 
 router = APIRouter()
 user_service = UserService()
-
-
+access_token_bearer = AccessTokenBearer()
 REFRESH_TOKEN_EXPIRY = 2
 
+# Bearer Token
+
 @router.get("", response_model=list[UserSchema])
-async def get_all_users(session: SessionDep):
+async def get_all_users(session: SessionDep, user_details=Depends(access_token_bearer)):
+    print(f"{user_details=}")
     return await user_service.get_all_users(session)
 
 
@@ -67,6 +70,15 @@ async def login_user(login_data: UserLoginSchema, session: SessionDep):
         )
 
 
+@router.get("/refresh_token")
+async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer())):
+    expiry_timestamp = token_details["exp"]
 
+    if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
+        new_access_token = create_access_token(user_data=token_details["user"])
+
+        return JSONResponse(content={"access_token": new_access_token})
+
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid refresh token")
 
 
