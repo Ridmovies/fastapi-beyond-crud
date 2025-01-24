@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 from src.auth.dependencies import AccessTokenBearer, RefreshTokenBearer, get_current_user, RoleChecker
 from src.auth.models import User
-from src.auth.schemas import UserCreateSchema, UserSchema, UserLoginSchema
+from src.auth.schemas import UserCreateSchema, UserSchema, UserLoginSchema, UserBookSchema
 from src.auth.service import UserService
 from src.auth.utils import verify_password, create_access_token
 from src.database import SessionDep
@@ -90,7 +90,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
 
 
 
-@router.get("/me", response_model=UserSchema)
+@router.get("/me", response_model=UserBookSchema)
 async def get_current_user(
         user: User = Depends(get_current_user),
         _: bool = Depends(role_checker)

@@ -31,9 +31,9 @@ async def get_all_books_submissions(user_uid: str):
 
 
 
-@router.get("/{book_id}", response_model=BookSchema, dependencies=[role_checker])
-async def get_book(book_id: int):
-    book = await BookService.get_one_by_id(model_id=book_id)
+@router.get("/{book_uid}", response_model=BookSchema, dependencies=[role_checker])
+async def get_book(book_uid: str):
+    book = await BookService.get_one_by_uid(book_uid)
     return book
 
 

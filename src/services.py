@@ -29,6 +29,13 @@ class BaseService:
             return result.scalar_one_or_none()
 
     @classmethod
+    async def get_one_by_uid(cls, model_uid: str):
+        async with async_session() as session:
+            query = select(cls.model).filter_by(uid=model_uid)
+            result = await session.execute(query)
+            return result.scalar_one_or_none()
+
+    @classmethod
     async def create(cls, data, user_uid: str):
         async with async_session() as session:
             data_dict = data.model_dump()

@@ -26,9 +26,12 @@ class UserSchema(BaseModel):
     created_at: datetime
     update_at: datetime
     role: str
-    books: list["Book"]
 
 
 class UserLoginSchema(BaseModel):
     email: str = Field(max_length=40)
     password: str = Field(min_length=4)
+
+
+class UserBookSchema(UserSchema):
+    books: list["Book"]

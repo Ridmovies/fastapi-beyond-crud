@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from src.auth.models import User
+    from src.reviews.models import Review
 
 import sqlalchemy.dialects.postgresql as pg
 from sqlmodel import Field, SQLModel, Column, Relationship
@@ -28,5 +29,9 @@ class Book(SQLModel, table=True):
     update_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
     user: Optional["User"] = Relationship(back_populates="books")
+    reviews: list["Review"] = Relationship(
+        back_populates="book",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
 
 

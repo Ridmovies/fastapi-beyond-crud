@@ -18,8 +18,8 @@ class BookOtherService:
         result = await session.scalars(statement)
         return result.all()
 
-    async def get_book(self, book_id: int, session: AsyncSession):
-        statement = select(Book).where(Book.id == book_id)
+    async def get_book(self, book_uid: str, session: AsyncSession):
+        statement = select(Book).where(Book.uid == book_uid)
         result = await session.scalars(statement)
         book = result.first()
         return book if book is not None else None
