@@ -29,10 +29,11 @@ class BaseService:
             return result.scalar_one_or_none()
 
     @classmethod
-    async def create(cls, data):
+    async def create(cls, data, user_uid: str):
         async with async_session() as session:
             data_dict = data.model_dump()
             instance = cls.model(**data_dict)
+            instance.user_uid = user_uid
             session.add(instance)
             await session.commit()
             return instance

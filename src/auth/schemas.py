@@ -3,6 +3,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, EmailStr
 
+from src.books.models import Book
+
 
 class UserCreateSchema(BaseModel):
     username: str = Field(max_length=8)
@@ -24,6 +26,7 @@ class UserSchema(BaseModel):
     created_at: datetime
     update_at: datetime
     role: str
+    books: list["Book"]
 
 
 class UserLoginSchema(BaseModel):

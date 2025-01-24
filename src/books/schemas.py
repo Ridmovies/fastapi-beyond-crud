@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class BookSchema(BaseModel):
-    id: int
+    uid: uuid.UUID
     title: str
     author: str
     publisher: str

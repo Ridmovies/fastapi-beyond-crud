@@ -25,7 +25,7 @@ REFRESH_TOKEN_EXPIRY = 2
 #   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3RyaW5nIiwidXNlcl91aWQiOiJiYzJkODZlZi0yODE3LTRlYmEtOTI3Zi0zNzY2ZjVjMGYxNjAifSwiZXhwIjoxNzM2OTY2MTQ5LCJqdGkiOiIyMDFjYmI4MC1iMjQ5LTRiZDMtYTFiZS02MzgyZDZkMjQyOWUiLCJyZWZyZXNoIjpmYWxzZX0.hnxuYsF5a8wzvSS5oO63uLAkFxQ6ikatXR3RUgEmEGw'
 
 @router.get("", response_model=list[UserSchema])
-async def get_all_users(session: SessionDep, user_details=Depends(access_token_bearer)):
+async def get_all_users(session: SessionDep):
     return await user_service.get_all_users(session)
 
 
@@ -90,7 +90,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
 
 
 
-@router.get("/me")
+@router.get("/me", response_model=UserSchema)
 async def get_current_user(
         user: User = Depends(get_current_user),
         _: bool = Depends(role_checker)
