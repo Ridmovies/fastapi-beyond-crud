@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from src.auth.dependencies import RoleChecker
 from src.books.schemas import (
     BookCreateSchema,
     BookSchema,
@@ -12,41 +13,42 @@ from src.database import SessionDep
 router = APIRouter()
 
 book_service = BookOtherService()
+role_checker = Depends(RoleChecker(["admin", "user"]))
 
 
 ### First option for using the BookService without session
 
 
-@router.get("/", response_model=list[BookSchema])
+@router.get("/", response_model=list[BookSchema], dependencies=[role_checker])
 async def get_all_books():
     books = await BookService.get_all()
     return books
 
 
-@router.get("/{book_id}", response_model=BookSchema)
+@router.get("/{book_id}", response_model=BookSchema, dependencies=[role_checker])
 async def get_book(book_id: int):
     book = await BookService.get_one_by_id(model_id=book_id)
     return book
 
 
-@router.post("/", response_model=BookSchema)
+@router.post("/", response_model=BookSchema, dependencies=[role_checker])
 async def create_book(book_data: BookCreateSchema):
     book = await BookService.create(data=book_data)
     return book
 
 
-@router.delete("/{book_id}")
+@router.delete("/{book_id}", dependencies=[role_checker])
 async def delete_book(book_id: int):
     await BookService.delete(model_id=book_id)
 
 
-@router.put("/{book_id}", response_model=BookSchema)
+@router.put("/{book_id}", response_model=BookSchema, dependencies=[role_checker])
 async def update_book(book_id: int, update_data: BookUpdateSchema):
     book = await BookService.update(model_id=book_id, update_data=update_data)
     return book
 
 
-@router.patch("/{book_id}", response_model=BookSchema)
+@router.patch("/{book_id}", response_model=BookSchema, dependencies=[role_checker])
 async def patch_book(book_id: int, update_data: BookPatchSchema):
     book = await BookService.patch(model_id=book_id, update_data=update_data)
     return book

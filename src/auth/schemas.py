@@ -10,6 +10,7 @@ class UserCreateSchema(BaseModel):
     password: str = Field(min_length=4)
     first_name: str
     last_name: str
+    # role: str = Field(default="user")
 
 
 class UserSchema(BaseModel):
@@ -22,6 +23,7 @@ class UserSchema(BaseModel):
     password_hash: str = Field(exclude=True)
     created_at: datetime
     update_at: datetime
+    role: str
 
 
 class UserLoginSchema(BaseModel):

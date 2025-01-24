@@ -3,6 +3,7 @@ import uuid
 from datetime import timedelta, datetime
 
 import jwt
+from fastapi import Depends
 from passlib.context import CryptContext
 
 from src.config import settings

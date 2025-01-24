@@ -3,7 +3,8 @@ from datetime import timedelta, datetime
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 
-from src.auth.dependencies import AccessTokenBearer, RefreshTokenBearer
+from src.auth.dependencies import AccessTokenBearer, RefreshTokenBearer, get_current_user, RoleChecker
+from src.auth.models import User
 from src.auth.schemas import UserCreateSchema, UserSchema, UserLoginSchema
 from src.auth.service import UserService
 from src.auth.utils import verify_password, create_access_token
@@ -12,7 +13,9 @@ from src.database import SessionDep
 router = APIRouter()
 user_service = UserService()
 access_token_bearer = AccessTokenBearer()
+role_checker = RoleChecker(["admin", "user"])
 REFRESH_TOKEN_EXPIRY = 2
+
 
 # Bearer Token
 
@@ -23,7 +26,6 @@ REFRESH_TOKEN_EXPIRY = 2
 
 @router.get("", response_model=list[UserSchema])
 async def get_all_users(session: SessionDep, user_details=Depends(access_token_bearer)):
-    print(f"{user_details=}")
     return await user_service.get_all_users(session)
 
 
@@ -86,4 +88,12 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
 
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid refresh token")
 
+
+
+@router.get("/me")
+async def get_current_user(
+        user: User = Depends(get_current_user),
+        _: bool = Depends(role_checker)
+):
+    return user
 

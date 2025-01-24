@@ -11,6 +11,7 @@ class UserService:
         user_data_dict: dict = user_data.model_dump()
         user = User(**user_data_dict)
         user.password_hash = generate_passwd_hash(user_data_dict.get("password"))
+        user.role = "user"
         session.add(user)
         await session.commit()
         return user

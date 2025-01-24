@@ -16,7 +16,7 @@ DATABASE_PARAMS = {"poolclass": NullPool}
 
 # async_engine = create_async_engine(url=DATABASE_URL, echo=True)
 async_engine = AsyncEngine(
-    create_engine(url=DATABASE_URL, echo=True, **DATABASE_PARAMS)
+    create_engine(url=DATABASE_URL, echo=False, **DATABASE_PARAMS)
 )
 async_session = async_sessionmaker(async_engine, expire_on_commit=False)
 
